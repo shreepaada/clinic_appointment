@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script>
+        function updateAvailableSlots() {
+            var doctor = document.getElementById('doctor').value;
+            var slots = {{ available_slots | tojson }};
+            var timeSelect = document.getElementById('appointment_time');
+            timeSelect.innerHTML = '';
+
+            if (slots[doctor]) {
+                slots[doctor].forEach(function (time) {
+                    var option = document.createElement('option');
+                    option.value = time;
+                    option.text = time;
+                    timeSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Call the function when the document is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAvailableSlots();
+        });
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{{ url_for('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+    <div class="content">
+        <h2>Book Your Appointment</h2>
+        <p>Welcome, {{ current_user.username }}!</p>
+
+        <h3>Your Appointments</h3>
+        <ul>
+            {% for appointment in user_appointments %}
+                <li>{{ appointment.doctor }} at {{ appointment.time }}
+                    <form method="post" style="display: inline;">
+                        <input type="hidden" name="doctor" value="{{ appointment.doctor }}">
+                        <input type="hidden" name="appointment_time" value="{{ appointment.time }}">
+                        <button type="submit" name="action" value="Cancel"><i class="fas fa-times"></i> Cancel</button>
+                    </form>
+                </li>
+            {% else %}
+                <li>No appointments booked.</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Book an Appointment</h3>
+        <form method="POST">
+            <label for="doctor">Choose a Doctor:</label>
+            <select id="doctor" name="doctor" onchange="updateAvailableSlots()">
+                {% for doctor in doctors %}
+                    <option value="{{ doctor }}">{{ doctor }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="appointment_time">Select Appointment Time:</label>
+            <select id="appointment_time" name="appointment_time">
+                <!-- Time slots will be populated here by JavaScript -->
+            </select>
+
+            <button type="submit" name="action" value="Book"><i class="fas fa-calendar-plus"></i> Book Appointment</button>
+        </form>
+    </div>
+    <script>
+        // Ensure the slots are updated when the doctor selection changes
+        document.getElementById('doctor').addEventListener('change', updateAvailableSlots);
+    </script>
+</body>
+</html>

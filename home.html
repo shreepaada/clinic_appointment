@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clinic Appointment Booking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="{{ url_for('register') }}"><i class="fas fa-user-plus"></i> Register</a>
+        <!-- Additional sidebar links can be added here -->
+    </div>
+    <div class="content">
+        <h1>Book or Cancel an Appointment</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <label for="doctor">Choose a Doctor:</label>
+            <select id="doctor" name="doctor" onchange="this.form.submit()">
+                {% for doctor, slots in doctors.items() %}
+                    <option value="{{ doctor }}" {% if doctor == selected_doctor %}selected{% endif %}>{{ doctor }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="appointment_time">Select Appointment Time:</label>
+            <select id="appointment_time" name="appointment_time">
+                {% for time in available_slots %}
+                    <option value="{{ time }}">{{ time }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" name="action" value="Book">Book Appointment</button>
+            <button type="submit" name="action" value="Cancel">Cancel Appointment</button>
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+
+

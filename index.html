@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Clinic Appointment System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="{{ url_for('register') }}"><i class="fas fa-user-plus"></i> Register</a>
+    </div>
+    <div class="content">
+        <h1>Welcome to the Clinic Appointment Booking System</h1>
+        <p>This is the home page of your Clinic Appointment System. Please login or register to continue.</p>
+    </div>
+</body>
+</html>
